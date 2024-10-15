@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Comparison Tool</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        canvas {
+            max-width: 100%;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="comparisonChart"></canvas>
+
+<script>
+// Example data, in reality, you would replace this with dynamic data
+const stock1Data = [100, 102, 104, 98, 110, 115, 120]; // Stock 1 prices
+const spyData = [300, 305, 310, 300, 320, 325, 330]; // SPY prices
+const labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul']; // Time labels
+
+// Create the chart with watermark
+const ctx = document.getElementById('comparisonChart').getContext('2d');
+const comparisonChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: labels,
+        datasets: [
+            {
+                label: 'Stock 1',
+                data: stock1Data,
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 2,
+                fill: false
+            },
+            {
+                label: 'SPY',
+                data: spyData,
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 2,
+                fill: false
+            }
+        ]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            watermark: {
+                draw: function(chart) {
+                    const ctx = chart.ctx;
+                    const width = chart.width;
+                    const height = chart.height;
+
+                    // Set up watermark styles
+                    ctx.save();
+                    ctx.font = "bold 48px Arial";
+                    ctx.fillStyle = "rgba(0, 0, 0, 0.1)"; // Light transparent color
+                    ctx.textAlign = "center";
+                    ctx.textBaseline = "middle";
+
+                    // Position the watermark in the middle of the chart
+                    ctx.translate(width / 2, height / 2);
+                    ctx.rotate(-Math.PI / 4); // Rotate watermark slightly
+                    ctx.fillText("DoodleInvest.com", 0, 0);
+
+                    ctx.restore();
+                }
+            }
+        }
+    },
+    plugins: [
+        {
+            id: 'watermark',
+            beforeDraw: function(chart) {
+                chart.options.plugins.watermark.draw(chart);
+            }
+        }
+    ]
+});
+</script>
+
+</body>
+</html>
